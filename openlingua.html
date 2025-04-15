@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OpenLingua</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      background: #303030;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      color: #ffffff;
+    }
+    .shop {
+      width: 250px;
+      background: #474747;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+    }
+    .shop h2 {
+      margin-top: 0;
+      font-size: 1.3em;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .shop-item {
+      margin: 15px 0;
+      padding: 15px;
+      background: #5a5a5a;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .shop-item-emoji {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .shop-item-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .shop-item-price {
+      color: #4CAF50;
+      margin: 10px 0;
+    }
+    .shop-item-button {
+      background: #000000;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+    }
+    .shop-item-button:disabled {
+      background: #333333;
+      cursor: not-allowed;
+    }
+    .main-content {
+      flex: 1;
+      min-width: 300px;
+      max-width: 600px;
+    }
+    h1 {
+      font-size: 1.8em;
+      text-align: center;
+      width: 100%;
+      color: #ffffff;
+    }
+    .question-container {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #474747;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .xp-bar-container {
+      margin-top: 15px;
+    }
+    .xp-bar {
+      height: 25px;
+      background: #333;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .xp-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00e676, #00c853);
+      transition: width 0.5s;
+    }
+    .stats {
+      margin-top: 8px;
+      font-size: 16px;
+    }
+    button.option-btn {
+      padding: 10px 15px;
+      margin: 6px 0;
+      display: block;
+      width: 100%;
+      font-size: 16px;
+      background: #000000;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button.option-btn:hover {
+      background: #333333;
+    }
+    button.option-btn:disabled {
+      background: #333333;
+      cursor: not-allowed;
+    }
+    .emoji-feedback {
+      font-size: 40px;
+      text-align: center;
+      margin: 15px 0;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.4s ease;
+    }
+    .emoji-feedback.show {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .leaderboard {
+      width: 300px;
+      background: #474747;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .leaderboard h2 {
+      margin-top: 0;
+      font-size: 1.3em;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      background: #474747;
+      z-index: 1;
+      color: #ffffff;
+    }
+    .leaderboard-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid #5a5a5a;
+      font-size: 14px;
+      color: #ffffff;
+    }
+    .leaderboard-entry.you {
+      font-weight: bold;
+      color: #2196F3;
+    }
+    .leaderboard-rank {
+      width: 25px;
+      text-align: center;
+    }
+    .leaderboard-name {
+      flex-grow: 1;
+      padding: 0 8px;
+    }
+    .leaderboard-energy {
+      width: 100px;
+      text-align: right;
+    }
+    .energy-change {
+      font-size: 0.7em;
+      margin-left: 4px;
+    }
+    .energy-up {
+      color: #4CAF50;
+    }
+    .energy-down {
+      color: #F44336;
+    }
+    .aaaaa {
+      width: 100%;
+      text-align: left;
+      margin-top: 19px;
+      font-size: 10px;
+      color: #808080;
+    }
+    .aaaaa a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    .aaaaa a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 1000px) {
+      body {
+        flex-direction: column;
+      }
+      .shop, .leaderboard {
+        width: auto;
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="shop">
+    <h2>🛒 Shop 🛒</h2>
+    <div class="shop-item">
+      <div class="shop-item-emoji">⚡</div>
+      <div class="shop-item-title">Energy Boost!</div>
+      <div class="shop-item-desc">You get 10% more Energy</div>
+      <div class="shop-item-price">200 coins</div>
+      <button class="shop-item-button" id="buyEnergyBoost">Buy</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h1>OpenLingua</h1>
+    <div class="question-container" id="question">
+      <p id="questionText"><strong>If you are seeing this, try refreshing the website.</strong></p>
+      <div id="options"></div>
+      <div id="feedbackEmoji" class="emoji-feedback"></div>
+    </div>
+    <div class="xp-bar-container">
+      <h3>✨XP Progress (Level <span id="level">1</span>)✨</h3>
+      <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+      <div class="stats">
+        <p><b>✨XP: <span id="xp">0</span> / <span id="nextLevelXP">15000</span></b></p>
+        <p><b>🪙Coins: <span id="coins">0</span></b></p>
+        <p><b>💎Highest XP: <span id="highestXP">0</span></b></p>
+        <p><b>⚡Energy: <span id="energy">0</span></b></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="leaderboard">
+    <h2>🥇Leaderboard🥇</h2>
+    <div id="leaderboardEntries"></div>
+  </div>
+
+  <div class="aaaaa">
+    OpenLingua template by <a href="https://github.com/sosen34/openlingua" target="_blank">sosen34</a>
+  </div>
+
+  <script>
+    let xp = 0;
+    let coins = 0;
+    let level = 1;
+    let highestXP = 0;
+    let energy = 0;
+    let currentQuestion = {};
+    let leaderboardPlayers = [];
+    let leaderboardUpdateInterval;
+    let energyMultiplier = 1.0;
+
+    function initLeaderboard() {
+      const savedLeaderboard = localStorage.getItem('languageLeaderboard');
+      if (savedLeaderboard) {
+        leaderboardPlayers = JSON.parse(savedLeaderboard);
+        if (leaderboardPlayers[0].energy < 320000) {
+          leaderboardPlayers[0].energy = Math.floor(320000 + Math.random() * 80000);
+        }
+      } else {
+        leaderboardPlayers = [];
+        const topPlayer = {
+          id: 'p' + Date.now(),
+          name: `Player${Math.floor(10000 + Math.random() * 90000)}`,
+          energy: Math.floor(320000 + Math.random() * 80000)
+        };
+        leaderboardPlayers.push(topPlayer);
+        for (let i = 0; i < 9; i++) {
+          const player = {
+            id: 'p' + Date.now() + i,
+            name: `Player${Math.floor(10000 + Math.random() * 90000)}`,
+            energy: Math.floor(topPlayer.energy * (0.7 - (i * 0.07)) + Math.random() * 5000)
+          };
+          leaderboardPlayers.push(player);
+        }
+        saveLeaderboard();
+      }
+      leaderboardPlayers.sort((a, b) => b.energy - a.energy);
+      leaderboardUpdateInterval = setInterval(updateLeaderboardPlayers, 1000);
+    }
+    
+    function saveLeaderboard() {
+      localStorage.setItem('languageLeaderboard', JSON.stringify(leaderboardPlayers));
+    }
+    
+    function updateLeaderboardPlayers() {
+      leaderboardPlayers.forEach(player => {
+        if (Math.random() < 0.25) {
+          if (Math.random() < 0.53) {
+            const increase = Math.floor(1200 + Math.random() * 400);
+            player.energy += increase;
+            player.change = { amount: increase, type: 'up' };
+          } else {
+            const decrease = Math.floor(400 + Math.random() * 300);
+            player.energy = Math.max(0, player.energy - decrease);
+            player.change = { amount: decrease, type: 'down' };
+          }
+        } else {
+          player.change = null;
+        }
+      });
+      leaderboardPlayers.sort((a, b) => b.energy - a.energy);
+      saveLeaderboard();
+      updateLeaderboardUI();
+    }
+    
+    function updateLeaderboardUI() {
+      const entriesDiv = document.getElementById('leaderboardEntries');
+      entriesDiv.innerHTML = '';
+      
+      // Create a combined array of all players plus you
+      const allPlayers = [...leaderboardPlayers];
+      const you = {
+        id: 'you',
+        name: 'You',
+        energy: energy,
+        isYou: true
+      };
+      allPlayers.push(you);
+      
+      // Sort the combined array
+      allPlayers.sort((a, b) => b.energy - a.energy);
+      
+      // Display only top 10 plus you (if you're not in top 10)
+      const displayPlayers = [];
+      let youAdded = false;
+      
+      for (let i = 0; i < Math.min(10, allPlayers.length); i++) {
+        if (allPlayers[i].id === 'you') {
+          youAdded = true;
+        }
+        displayPlayers.push(allPlayers[i]);
+      }
+      
+      // If you're not in the top 10, add you at the end
+      if (!youAdded) {
+        const youIndex = allPlayers.findIndex(p => p.id === 'you');
+        if (youIndex >= 0) {
+          // Add a separator if you're not adjacent to the 10th player
+          if (youIndex > 10 && allPlayers[9].energy - allPlayers[10].energy > 1000) {
+            const separator = {
+              id: 'sep',
+              name: '...',
+              energy: '',
+              isSeparator: true
+            };
+            displayPlayers.push(separator);
+          }
+          displayPlayers.push(allPlayers[youIndex]);
+        }
+      }
+      
+      // Render the display players
+      displayPlayers.forEach((player, displayIndex) => {
+        const entry = document.createElement('div');
+        entry.className = `leaderboard-entry ${player.id === 'you' ? 'you' : ''} ${player.isSeparator ? 'separator' : ''}`;
+        
+        const rank = document.createElement('div');
+        rank.className = 'leaderboard-rank';
+        rank.textContent = player.isSeparator ? '' : (allPlayers.findIndex(p => p.id === player.id) + 1);
+        
+        const name = document.createElement('div');
+        name.className = 'leaderboard-name';
+        name.textContent = player.name;
+        
+        const energyDiv = document.createElement('div');
+        energyDiv.className = 'leaderboard-energy';
+        energyDiv.textContent = player.isSeparator ? '' : player.energy.toLocaleString();
+        
+        if (player.change && !player.isSeparator) {
+          const changeSpan = document.createElement('span');
+          changeSpan.className = `energy-change energy-${player.change.type}`;
+          changeSpan.textContent = player.change.type === 'up' ? `+${player.change.amount}` : `-${player.change.amount}`;
+          energyDiv.appendChild(changeSpan);
+        }
+        
+        entry.appendChild(rank);
+        entry.appendChild(name);
+        entry.appendChild(energyDiv);
+        entriesDiv.appendChild(entry);
+      });
+    }
+
+    function setupShop() {
+      document.getElementById('buyEnergyBoost').addEventListener('click', () => {
+        if (coins >= 200) {
+          coins -= 200;
+          energyMultiplier += 0.1;
+          updateUI();
+          saveGameState();
+          alert('Energy Boost purchased! You now get 20% more energy from all sources!');
+        } else {
+          alert('Not enough coins!');
+        }
+      });
+    }
+
+    const questionBank = {
+      1: [
+        {
+          text: "Empty space",
+          options: [
+            { text: "Correct", correct: true },
+            { text: "False", correct: false },
+            { text: "False", correct: false }
+          ]
+        },
+        {
+          text: "Empty space",
+          options: [
+            { text: "False", correct: false },
+            { text: "Correct", correct: true },
+            { text: "False", correct: false }
+          ]
+        },
+        {
+          text: "Empty space",
+          options: [
+            { text: "Correct", correct: true },
+            { text: "False", correct: false },
+            { text: "False", correct: false }
+          ]
+        }
+      ],
+      2: [
+        {
+          text: "Empty space",
+          options: [
+            { text: "Correct", correct: true },
+            { text: "False", correct: false },
+            { text: "False", correct: false }
+          ]
+        },
+        {
+          text: "Empty space",
+          options: [
+            { text: "False", correct: false },
+            { text: "Correct", correct: true },
+            { text: "False", correct: false }
+          ]
+        },
+        {
+          text: "Empty space",
+          options: [
+            { text: "Correct", correct: true },
+            { text: "False", correct: false },
+            { text: "False", correct: false }
+          ]
+        }
+      ],
+    };
+
+    function getXPForNextLevel(level) {
+      if (level <= 2) return level % 2 === 1 ? 20000 : 25000;
+      if (level <= 4) return level % 2 === 1 ? 40000 : 45000;
+      if (level <= 8) return level % 2 === 1 ? 50000 : 55000;
+      if (level <= 12) return level % 2 === 1 ? 75000 : 80000;
+      return level % 2 === 1 ? 95000 : 100000;
+    }
+
+    function calculateLevelFromXP(xp) {
+      let calculatedLevel = 1;
+      let xpNeeded = 0;
+      while (true) {
+        xpNeeded = getXPForNextLevel(calculatedLevel);
+        if (xp >= xpNeeded) {
+          xp -= xpNeeded;
+          calculatedLevel++;
+        } else {
+          break;
+        }
+      }
+      return calculatedLevel;
+    }
+
+    function updateUI() {
+      document.getElementById('xp').textContent = xp;
+      document.getElementById('level').textContent = level;
+      document.getElementById('coins').textContent = coins;
+      document.getElementById('highestXP').textContent = highestXP;
+      document.getElementById('energy').textContent = energy;
+      document.getElementById('nextLevelXP').textContent = getXPForNextLevel(level);
+      const xpPercent = Math.min(100, (xp / getXPForNextLevel(level)) * 100);
+      document.getElementById('xpFill').style.width = xpPercent + '%';
+      document.getElementById('buyEnergyBoost').disabled = coins < 200;
+      updateLeaderboardUI();
+    }
+
+    function levelUpCheck() {
+      while (xp >= getXPForNextLevel(level)) {
+        xp -= getXPForNextLevel(level);
+        level++;
+        const energyReward = Math.floor((6200 + Math.random() * 1800) * energyMultiplier);
+        energy += energyReward;
+        showLevelPopup(level, energyReward);
+      }
+      const currentTotalXP = calculateTotalXP(level, xp);
+      if (currentTotalXP > highestXP) {
+        highestXP = currentTotalXP;
+      }
+    }
+
+    function calculateTotalXP(currentLevel, currentXP) {
+      let totalXP = currentXP;
+      for (let l = 1; l < currentLevel; l++) {
+        totalXP += getXPForNextLevel(l);
+      }
+      return totalXP;
+    }
+
+    function setAnswerButtonsDisabled(disabled) {
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach(btn => {
+        btn.disabled = disabled;
+      });
+    }
+
+    function showFeedback(correct) {
+      const emoji = document.getElementById('feedbackEmoji');
+      emoji.textContent = correct ? "YEAH" : "NAH";
+      emoji.classList.add("show");
+      setAnswerButtonsDisabled(true); // Disable buttons when showing feedback
+      
+      setTimeout(() => {
+        emoji.classList.remove("show");
+        setAnswerButtonsDisabled(false); // Re-enable buttons after feedback is hidden
+      }, 800);
+    }
+
+    function loadRandomQuestion() {
+      let possibleLevels = [level];
+      if (level > 1) possibleLevels.push(level - 1);
+      const selectedLevel = possibleLevels[Math.floor(Math.random() * possibleLevels.length)];
+      const questions = questionBank[selectedLevel];
+      currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+      document.getElementById('questionText').innerText = currentQuestion.text;
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      currentQuestion.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "option-btn";
+        btn.innerText = opt.text;
+        btn.onclick = () => submitAnswer(opt.correct);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function submitAnswer(isCorrect) {
+      if (isCorrect) {
+        showFeedback(true);
+        xp += 955;
+        coins += Math.floor(Math.random() * 4) + 2;
+        const energyGain = Math.floor((1200 + Math.random() * 400) * energyMultiplier);
+        energy += energyGain;
+        levelUpCheck();
+        updateUI();
+        setTimeout(loadRandomQuestion, 800);
+      } else {
+        showFeedback(false);
+        const energyLoss = Math.floor(400 + Math.random() * 300);
+        energy = Math.max(0, energy - energyLoss);
+        updateUI();
+        setTimeout(loadRandomQuestion, 800);
+      }
+      saveGameState();
+    }
+
+    const levelPopups = {
+      1: "Level 1 Info - Empty",
+      2: "Level 2 Info - Empty",
+      3: "Level 3 Info - Empty",
+      4: "Level 4 Info - Empty",
+      5: "Level 5 Info - Empty",
+      6: "Level 6 Info - Empty",
+      7: "Level 7 Info - Empty",
+      8: "Level 8 Info - Empty",
+      9: "Level 9 Info - Empty",
+      10: "Level 10 Info - Empty",
+      11: "Level 11 Info - You're wild.",
+      12: "Level 12 Info - Final base level!",
+    };
+
+    function showLevelPopup(level, energyReward) {
+      const popup = document.getElementById('levelPopup');
+      const text = document.getElementById('levelPopupText');
+      const rewardText = document.getElementById('levelPopupReward');
+      text.innerText = levelPopups[level] || "Level info coming soon!";
+      rewardText.innerText = `+${energyReward.toLocaleString()} Energy!`;
+      popup.style.display = 'block';
+    }
+
+    function closeLevelPopup() {
+      document.getElementById('levelPopup').style.display = 'none';
+    }
+
+    function saveGameState() {
+      const gameState = {
+        xp: xp,
+        coins: coins,
+        level: level,
+        highestXP: highestXP,
+        energy: energy,
+        energyMultiplier: energyMultiplier
+      };
+      localStorage.setItem('languageGameState', JSON.stringify(gameState));
+    }
+
+    function loadGameState() {
+      const savedState = localStorage.getItem('languageGameState');
+      if (savedState) {
+        const state = JSON.parse(savedState);
+        xp = state.xp || 0;
+        coins = state.coins || 0;
+        level = state.level || 1;
+        highestXP = state.highestXP || 0;
+        energy = state.energy || 0;
+        energyMultiplier = state.energyMultiplier || 1.0;
+        return true;
+      }
+      return false;
+    }
+
+    function initGame() {
+      const hasSavedGame = loadGameState();
+      updateUI();
+      loadRandomQuestion();
+      initLeaderboard();
+      setupShop();
+    }
+
+    initGame();
+  </script>
+
+<div id="levelPopup" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
+background:white; border:2px solid #444; padding:20px; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.2); z-index:1001; max-width: 90%; width: 400px;">
+  <h2 style="margin-top: 0;">Level Up!</h2>
+  <div id="levelPopupText" style="margin-top:10px;"></div>
+  <div id="levelPopupReward" style="font-size: 1.1em; color: #4CAF50; margin: 8px 0;"></div>
+  <button onclick="closeLevelPopup()" style="margin-top:10px; padding: 8px 16px; background: #383838; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+</div>
+
+</body>
+</html>
